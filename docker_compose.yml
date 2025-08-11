@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    environment:
+     POSTGRES_DB: django_batabase
+     POSTGRES_USER: postgresql
+     POSTGRES_PASSWORD: 12345678QWERtyui
+
+volumes:
+  dbdata:

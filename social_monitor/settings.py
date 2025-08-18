@@ -53,7 +53,7 @@ INSTALLED_APPS = [
     #local
 
     'telegram_bot',
-    'tracker'
+    'tracker',
 ]
 
 MIDDLEWARE = [

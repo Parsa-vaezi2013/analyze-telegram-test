@@ -1,7 +1,7 @@
-# from telegram import Bot
+from telegram import Bot
 
-# BOT_TOKEN = '8171301737:AAGUb8GQ6M8TqIvOFARMpCJjVIz7hnhry00'
-# bot = -1002835752715
+BOT_TOKEN = '8171301737:AAGUb8GQ6M8TqIvOFARMpCJjVIz7hnhry00'
+bot = -1002835752715
 
 import requests
 

@@ -12,32 +12,34 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-
-
-
-
-import os
 from dotenv import load_dotenv
 
-load_dotenv()
+def require_env(name: str) -> str:
+    val = os.getenv(name)
+    if val is None or val == "":
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return val
 
-TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
-TELEGRAM_CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
+
+
+TELEGRAM_BOT_TOKEN = require_env("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID = int(require_env("CHANNEL_ID"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&hu(%k$%we(#*!x(()40)w6g@mu9f#zy#tp!#7n+e@a6r0)88g'
+SECRET_KEY = require_env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = require_env("DEBUG").lower == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = [h for h in require_env("ALLOWED_HOSTS").split(",") if h]
 
 
 # Application definition
@@ -90,13 +92,13 @@ WSGI_APPLICATION = 'social_monitor.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("POSTGRES_DB", "social_monitor"),
-        'USER': os.getenv("POSTGRES_USER", "postgres"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD", "postgres"),
-        'HOST': os.getenv("POSTGRES_HOST", "db"),
-        'PORT': os.getenv("POSTGRES_PORT", "5432"),
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": require_env("POSTGRES_DB"),
+        "USER": require_env("POSTGRES_USER"),
+        "PASSWORD": require_env("POSTGRES_PASSWORD"),
+        "HOST": require_env("POSTGRES_HOST"),
+        "PORT": require_env("POSTGRES_PORT"),
     }
 }
 
@@ -155,7 +157,8 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
-CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_BROKER_URL = require_env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = require_env("CELERY_RESULT_BACKEND")
 CELERY_BEAT_SCHEDULE = {
     'check-followers-every-minute': {
         'task': 'tracker.tasks.check_followers',
@@ -164,5 +167,3 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 CELERY_TASK_ALWAYS_EAGER = False
-CELERY_RESULT_BACKEND = "rpc://"
-

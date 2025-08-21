@@ -155,3 +155,10 @@ celerybeat-schedule-wal
 # VSCode / PyCharm
 .vscode/
 .idea/
+
+
+
+
+
+.env/
+db.sqlite3
